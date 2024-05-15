@@ -1,3 +1,6 @@
+ /* TEST */
+
+
 .addin {
     padding: 1em;
     background-color: #505C6D; /* Sets the background color to "Secondary" */
@@ -31,4 +34,9 @@
     font-family: "Segoe UI Semibold", "Segoe WP Semibold", device-segoe-semibold, "Segoe UI", "Segoe WP", Segoe, Tahoma, Helvetica, Arial, sans-serif;
     font-size: 12pt;
     text-transform: uppercase; /* Sets the caption to use all uppercase letters */
+}
+
+
+.primary-color {
+    background-color: #00B7C3;
 }
