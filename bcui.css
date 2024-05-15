@@ -1,0 +1,34 @@
+.addin {
+    padding: 1em;
+    background-color: #505C6D; /* Sets the background color to "Secondary" */
+}
+
+.addin .control {
+     border-color: #00B7C3; /* Sets the border color to "Primary" */
+}
+
+.addin .control .caption {
+    color: #00B7C3; /* Sets the captions to "Primary" */
+
+    /* Segoe UI Light, small */
+    font-family: "Segoe UI Light", "Segoe WP Light", device-segoe-light, "Segoe WP Semilight", "Segoe UI", "Segoe WP", Segoe, Tahoma, Helvetica, Arial, sans-serif; /* Sets the font of the caption to ""Segoe UI Light" */
+    font-size: 10.5pt;
+}
+
+.addin .control .value {
+    color: #008089; /* Tertiary shade 2 */
+
+    /* Segoe UI, medium */
+    font-family: "Segoe UI", "Segoe WP", Segoe, device-segoe, Tahoma, Helvetica, Arial, sans-serif;
+    font-size: 12pt;
+}
+
+.addin .control .submit {
+    color: white; /* Sets the caption text to "white" */
+    background-color: #00B7C3; /* Sets the background to "Primary */
+
+    /* Segoe UI Semibold, medium */
+    font-family: "Segoe UI Semibold", "Segoe WP Semibold", device-segoe-semibold, "Segoe UI", "Segoe WP", Segoe, Tahoma, Helvetica, Arial, sans-serif;
+    font-size: 12pt;
+    text-transform: uppercase; /* Sets the caption to use all uppercase letters */
+}
