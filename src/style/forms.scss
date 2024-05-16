@@ -1,0 +1,31 @@
+field label {
+    font-family: var(--font-family-Segoe-UI);
+    font-size: var(--small-font-size);
+}
+
+field input {
+    font-family: var(--font-family-Segoe-UI);
+    font-size: var(--small-font-size);
+    padding: 5px 10px;
+
+}
+
+input[type=text] {
+    border: 1px solid var(--color-border);
+    border-radius: 0px;
+    font-family: var(--font-family-Segoe-UI);
+    font-size: var(--small-font-size);
+    padding: 5px 10px;
+}
+
+input[type=text]:hover {
+    border: 1px solid var(--color-border-hover);
+}
+
+input[type=text]:active,
+input[type=text]:focus,
+input[type=text]:focus-visible,
+input[type=text]:focus-within {
+    border: 1px solid var(--color-border-active);
+    outline: unset;
+}

@@ -1,0 +1,10 @@
+{
+    "compile-hero.disable-compile-files-on-did-save-code": false,
+    "compile-hero.jade-output-directory": "./../../dist",
+    "compile-hero.less-output-directory": "./../../dist",
+    "compile-hero.pug-output-directory": "./../../dist",
+    "compile-hero.sass-output-directory": "./../../dist",
+    "compile-hero.scss-output-directory": "./../../dist",
+    "compile-hero.stylus-output-directory": "./../../dist",
+    "compile-hero.typescriptx-output-directory": "./../../dist"
+}
