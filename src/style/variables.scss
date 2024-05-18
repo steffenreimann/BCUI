@@ -1,10 +1,13 @@
 :root {
+    --color-background: #f6f7f8;
     --color-primary: #00B7C3;
     --color-secondary: #505C6D;
 
     --color-border: #ababab;
-    --color-border-hover: #00B7C3 !important;
-    --color-border-active: #ababab !important;
+    --color-border-hover: #009ba7 !important;
+    --color-button-hover: #d9f0f2 !important;
+    --color-select-option-hover: #767676 !important;
+    --color-border-active: #585858 !important;
 
 
     /* Standard colors */
@@ -33,6 +36,7 @@
 
     /* Chart colors */
     --color-chart-secondary-1: #505C6D;
+    --color-chart-header: #505C6D;
     --color-chart-secondary-2: #008089;
     --color-chart-primary: #00B7C3;
     --color-chart-yellow: #C9C472;
