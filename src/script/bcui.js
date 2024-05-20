@@ -52,7 +52,7 @@ var data = [
     {
         id: { value: 2, caption: 'ID' },
         age: { value: 35, caption: 'Alter' },
-        city: { value: 'Hamburg', caption: 'Stadt' },
+        city: { value: 'Hamburg', caption: 'Stadt', type: 'Option', options: 'cities' },
         test: { value: 'Hamburg', caption: 'Stadt' }
     },
     {
@@ -63,12 +63,12 @@ var data = [
     }
 ]
 
+var options = {
+    cities: ['London', 'Hamburg', 'New York']
+}
+
 
 function renderTable(HTMLElement, data) {
-
-
-
-
 
     HTMLElement.style.display = 'grid';
 
@@ -86,7 +86,8 @@ function renderTable(HTMLElement, data) {
         colWidth = HTMLElement.offsetWidth / 5;
     }
 
-    colWidth -= 100
+    console.log(colWidth);
+    colWidth -= 300
 
     console.log(colWidth);
 
@@ -114,18 +115,55 @@ function renderTable(HTMLElement, data) {
 
     colIndex = 0;
     data.forEach(element => {
+        //Zeile 
         var tablerow = document.createElement('tablerow');
         //console.log(element);
 
 
-        for (const key in data[0]) {
-            if (Object.hasOwnProperty.call(data[0], key)) {
-                const element = data[0][key];
+        for (const key in element) {
+            if (Object.hasOwnProperty.call(element, key)) {
+                //Zeilendaten 
+                const element1 = element[key];
                 //console.log(key, element);
 
                 var tabledata = document.createElement('tabledata');
                 tabledata.setAttribute("colIndex", colIndex);
-                tabledata.innerHTML = element.value;
+
+
+                var field
+                switch (element1.type) {
+                    case 'String':
+                        field = document.createElement('input');
+                        field.type = 'text';
+                        field.classList.add('form');
+                        field.value = element1.value;
+                        break;
+                    case 'Option':
+                        field = document.createElement('select');
+                        // field.type = 'text';
+                        field.classList.add('form');
+
+                        options[element1.options].forEach(option => {
+                            var optionsHTML = document.createElement('option');
+                            optionsHTML.innerHTML = option
+                            field.appendChild(optionsHTML)
+                        });
+
+                        field.value = element1.value;
+                        break;
+
+                    default:
+                        field = document.createElement('input');
+                        field.type = 'text';
+                        field.classList.add('form');
+                        field.value = element1.value;
+                        break;
+                }
+
+                field.setAttribute("colIndex", colIndex);
+
+                tabledata.appendChild(field);
+
                 tabledata.style.width = `${colWidth}px`;
                 tablerow.appendChild(tabledata);
             }
@@ -134,9 +172,6 @@ function renderTable(HTMLElement, data) {
         colIndex = 0
         HTMLElement.appendChild(tablerow)
     })
-
-
-
 
     // HTMLElement.
 

@@ -46,3 +46,36 @@ bctable tablerow:hover:has(tabledata) {
     -moz-box-shadow: 0px 6px 10px -5px rgba(85, 85, 85, 0.4);
     box-shadow: 0px 6px 10px -5px rgba(85, 85, 85, 0.4);
 }
+
+/* select {
+    padding-left: 2px !important;
+} */
+
+input {
+    padding-left: 4px !important;
+}
+
+bctable .form {
+    background-color: #ffffff00;
+    /*     margin: 0px;
+    padding: 0px;
+   
+    height: 100%; */
+    font-size: inherit;
+    font-family: inherit;
+    background-image: none;
+    border: 0px solid var(--color-border) !important;
+
+    //resize: both;
+    overflow: auto;
+
+    margin: 0px;
+    padding: 0px;
+    display: block;
+
+
+    width: 100%;
+    height: auto;
+    min-height: 20px;
+    min-width: 20px;
+}
