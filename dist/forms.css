@@ -1,0 +1,58 @@
+body {
+  font-family: var(--font-family-Segoe-UI);
+  font-size: var(--small-font-size); }
+
+.line-separator {
+  background-image: linear-gradient(to right, var(--color-border) 15%, rgba(255, 255, 255, 0) 0%);
+  background-position: center;
+  background-size: 12px 2px;
+  background-repeat: repeat-x; }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+  flex-basis: auto;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 0px; }
+
+input.form {
+  border: 1px solid var(--color-border); }
+
+input.form:hover {
+  border: 1px solid var(--color-border-hover); }
+
+input.form:active,
+input.form:focus,
+input.form:focus-visible,
+input.form:focus-within {
+  border: 1px solid var(--color-border-active);
+  outline: unset; }
+
+input.form[type=button] {
+  border: 1px solid var(--color-border);
+  background-color: #fff;
+  cursor: pointer; }
+
+input.form[type=button]:hover {
+  background-color: var(--color-button-hover); }
+
+select {
+  border: 1px solid var(--color-border); }
+
+select.form:hover {
+  border: 1px solid var(--color-border-hover); }
+
+select:active,
+select:focus,
+select:focus-visible,
+select:focus-within {
+  border: 1px solid var(--color-border-active);
+  outline: unset; }
+
+/*# sourceMappingURL=forms.css.map */

@@ -1,0 +1,49 @@
+/* Grid container */
+.row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 5px;
+  /* or use grid-gap shorthand property */
+  grid-auto-flow: dense;
+  align-items: flex-start; }
+
+[class^='col'] {
+  min-width: max-content; }
+
+.col1 {
+  grid-column: auto / span 1; }
+
+.col2 {
+  grid-column: auto / span 2; }
+
+.col3 {
+  grid-column: auto / span 3; }
+
+.col4 {
+  grid-column: auto / span 4; }
+
+.col5 {
+  grid-column: auto / span 5; }
+
+.col6 {
+  grid-column: auto / span 6; }
+
+.col7 {
+  grid-column: auto / span 7; }
+
+.col8 {
+  grid-column: auto / span 8; }
+
+.col9 {
+  grid-column: auto / span 9; }
+
+.col10 {
+  grid-column: auto / span 10; }
+
+.col11 {
+  grid-column: auto / span 11; }
+
+.col12 {
+  grid-column: auto / span 12; }
+
+/*# sourceMappingURL=grid.css.map */
