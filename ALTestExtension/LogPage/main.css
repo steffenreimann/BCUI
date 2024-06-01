@@ -1,0 +1,69 @@
+.ItemsWrapper {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 20%;
+    display: grid;
+    grid-template-columns: 1fr;
+    /* This creates a single column layout */
+}
+
+.Item {
+    cursor: move;
+    grid-column: 1;
+    z-index: 999;
+    /* Places each item in the first column */
+}
+
+.CalendarWrapper {
+    position: absolute;
+    left: 20%;
+    top: 0px;
+    height: 100%;
+    width: 80%;
+}
+
+.addin {
+    font-family: "Segoe UI Light", "Segoe WP Light", device-segoe-light, "Segoe WP Semilight", "Segoe UI", "Segoe WP", Segoe, Tahoma, Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+}
+
+.bc_data_line {
+    font-family: "Segoe UI Light", "Segoe WP Light", device-segoe-light, "Segoe WP Semilight", "Segoe UI", "Segoe WP", Segoe, Tahoma, Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+}
+
+h2 {
+    font-family: "Segoe UI Light", "Segoe WP Light", device-segoe-light, "Segoe WP Semilight", "Segoe UI", "Segoe WP", Segoe, Tahoma, Helvetica, Arial, sans-serif;
+    display: block;
+    font-size: 1.5em;
+    margin-block-start: 0.83em;
+    margin-block-end: 0.83em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+}
+
+json-viewer {
+    --background-color: #ffffff;
+    --color: #000000;
+    /*     --font-family: monaco, Consolas, 'Lucida Console', monospace;
+    --font-size: 1rem; */
+    --indent-size: 1.5em;
+    --indentguide-size: 1px;
+    --indentguide-style: solid;
+    --indentguide-color: #333;
+    --indentguide-color-active: #666;
+    --indentguide: var(--indentguide-size) var(--indentguide-style) var(--indentguide-color);
+    --indentguide-active: var(--indentguide-size) var(--indentguide-style) var(--indentguide-color-active);
+    --string-color: #12980b;
+    --number-color: #b07945;
+    --boolean-color: #2f8ad1;
+    --null-color: #df9cf3;
+    --property-color: #51839a;
+    --preview-color: rgb(179 73 0 / 90%);
+    --highlight-color: #c5edff;
+    font-family: "Segoe UI Light", "Segoe WP Light", device-segoe-light, "Segoe WP Semilight", "Segoe UI", "Segoe WP", Segoe, Tahoma, Helvetica, Arial, sans-serif;
+    font-size: 10.5pt;
+}

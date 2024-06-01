@@ -172,10 +172,16 @@ function renderTable(HTMLElement, data) {
         colIndex = 0
         HTMLElement.appendChild(tablerow)
     })
-
-    // HTMLElement.
-
 }
 
-renderTable(document.getElementById('testtable'), data)
+function getControlAddin(params) {
+    return document.getElementById('controlAddIn');
+}
 
+function Init(params) {
+    document.getElementById('controlAddIn').insertAdjacentHTML('beforeend', html)
+}
+
+
+
+//renderTable(document.getElementById('testtable'), data)

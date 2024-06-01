@@ -1,0 +1,27 @@
+{
+  "id": "a8c1c27c-9baa-4f37-84f5-6de03d383353",
+  "name": "BCUI_Test",
+  "publisher": "Steffen Reimann",
+  "version": "0.0.0.1",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "23.0.0.0",
+  "application": "23.0.0.0",
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 50100
+    }
+  ],
+  "resourceExposurePolicy": {
+    "allowDebugging": false,
+    "allowDownloadingSource": false,
+    "includeSourceInSymbolFile": false
+  },
+  "target": "Cloud",
+  "runtime": "12.1",
+  "features": [
+    "NoImplicitWith",
+    "TranslationFile"
+  ]
+}
