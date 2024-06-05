@@ -6,5 +6,19 @@
     "compile-hero.sass-output-directory": "./../../dist",
     "compile-hero.scss-output-directory": "./../../dist",
     "compile-hero.stylus-output-directory": "./../../dist",
-    "compile-hero.typescriptx-output-directory": "./../../dist"
+    "compile-hero.typescriptx-output-directory": "./../../dist",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.DS_Store": true,
+        "**/.factorypath": true,
+        "**/.git": true,
+        "**/.hg": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.svn": true,
+        "**/CVS": true,
+        "**/dist": true,
+        "**/Thumbs.db": true
+    },
+    "explorerExclude.backup": {}
 }
