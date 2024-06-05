@@ -183,5 +183,21 @@ function Init(params) {
 }
 
 
+renderTable(document.getElementById('testtable'), data)
 
-//renderTable(document.getElementById('testtable'), data)
+
+var jobs = {
+
+
+}
+
+
+function RenderGantt(params) {
+
+    var diag = document.querySelector('bcgantt')
+
+    diag.querySelector('left').remove()
+
+
+
+}

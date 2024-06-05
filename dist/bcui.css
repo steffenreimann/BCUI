@@ -355,4 +355,57 @@ select:focus-within {
   border: 1px solid var(--color-border-active);
   outline: unset; }
 
+.gantt-chart {
+  display: flex;
+  flex-direction: column;
+  width: 100%; }
+
+.gantt-header {
+  display: flex;
+  background-color: #f2f2f2;
+  padding: 10px; }
+
+.gantt-header-item {
+  flex: 1;
+  text-align: center; }
+
+.gantt-body {
+  display: flex;
+  flex-direction: column;
+  }
+
+.gantt-grid {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  }
+
+.gantt-grid-row {
+  display: flex;
+  padding: 5px;
+  border-bottom: 1px solid #ddd; }
+
+.gantt-grid-cell {
+  flex: 1;
+  text-align: center; }
+
+.gantt-rows {
+  display: flex;
+  flex-direction: column;
+  width: 100%; }
+
+.gantt-row {
+  display: flex;
+  padding: 5px;
+  border-bottom: 1px solid #ddd; }
+
+.gantt-row-item {
+  flex: 1;
+  text-align: center; }
+
+.gantt-bar {
+  height: 20px;
+  border-radius: 5px; }
+
 /*# sourceMappingURL=bcui.css.map */
