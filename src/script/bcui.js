@@ -59,9 +59,6 @@ function renderTable(HTMLElement, data) {
     console.log(HTMLElement.offsetWidth);
     console.log(getComputedStyle(HTMLElement).width);
 
-
-
-
     var colWidth = 100;
     if (cols <= 5) {
         colWidth = HTMLElement.offsetWidth / cols;
@@ -185,36 +182,6 @@ function createPastFutureArray(startMoment, stepsPast, stepsFuture, interval = '
 
 function renderTimeline(HTMLElement, data) {
 
-    // Beispiel: Startpunkt heute, 5 Schritte in die Vergangenheit, 5 in die Zukunft
-    const today = moment().add(3, 'hour');
-    const pastFutureArray = createPastFutureArray(today, 7, 7);
-
-    // Ausgabe (formatiert für bessere Lesbarkeit)
-    pastFutureArray.forEach(time => {
-        console.log(time.format('DD.MM.YYYY HH'));
-
-        var div = document.createElement('timeunitwrapper');
-        var timeunit = document.createElement('timeunit');
-        timeunit.innerHTML = time.format('DD.MM.YY');
-        div.appendChild(timeunit);
-
-
-        for (let index = 1; index < 25; index++) {
-
-            var timeitem = document.createElement('timeitem');
-            timeitem.innerHTML = index;
-            div.appendChild(timeitem);
-        }
-
-        HTMLElement.querySelector('header').appendChild(div);
-
-    });
-
-
-
-
-
-
 
     /*     data.forEach(element => {
             element.timeline.forEach(timelineElement => {
@@ -228,6 +195,172 @@ function renderTimeline(HTMLElement, data) {
 
 
 
+class Gantt {
+
+    constructor(data) {
+        this.DaysBeforePointer = data.DaysBeforePointer || 4;
+        this.DaysAfterPointer = data.DaysAfterPointer || 4;
+        this.TimeUnit = data.TimeUnit || 'day';
+        this.Pointer = data.Pointer || moment();
+        this.HTMLElement = data.HTMLElement;
+
+        this.header = this.HTMLElement.querySelector('header');
+        this.table = this.HTMLElement.querySelector('bctable');
+
+        this.data = data.data;
+    }
+
+    render() {
+
+        console.log('dpsoijfgoisjdgoipsdfjgoi');
+
+
+        this.table.style.display = 'grid';
+
+        var cols = Object.keys(data[0].table).length
+
+
+        // console.log(HTMLElement);
+        console.log(this.table);
+        console.log(this.table.offsetWidth);
+        console.log(getComputedStyle(this.table).width);
+
+        var colWidth = 100;
+        if (cols <= 5) {
+            colWidth = this.table.offsetWidth / cols;
+        } else {
+            colWidth = this.table.offsetWidth / 5;
+        }
+
+        console.log(colWidth);
+        colWidth -= 15
+
+        console.log(colWidth);
+
+        var tablerow = document.createElement('tablerow');
+        var colIndex = 0;
+        for (const key in data[0].table) {
+            if (Object.hasOwnProperty.call(data[0].table, key)) {
+                const element = data[0].table[key];
+                //console.log(key, element);
+
+                var tableheader = document.createElement('tableheader');
+                tableheader.innerHTML = element.caption;
+                tableheader.setAttribute("colIndex", colIndex);
+                tableheader.style.width = `${colWidth}px`;
+                const resizeBar = document.createElement('resizebar');
+                tableheader.appendChild(resizeBar)
+
+                resizeBar.addEventListener('mousedown', startResize);
+
+                tablerow.appendChild(tableheader);
+                this.table.appendChild(tablerow)
+                colIndex++
+            }
+        }
+
+
+
+
+
+        // Beispiel: Startpunkt heute, 5 Schritte in die Vergangenheit, 5 in die Zukunft
+        //const today = moment().add(3, 'hour');
+        const pastFutureArray = createPastFutureArray(this.Pointer, this.DaysBeforePointer, this.DaysAfterPointer);
+
+        // Ausgabe (formatiert für bessere Lesbarkeit)
+        pastFutureArray.forEach(time => {
+            console.log(time.format('DD.MM.YYYY HH'));
+
+            var div = document.createElement('tableheader');
+            var timeunit = document.createElement('timeunit');
+            timeunit.innerHTML = time.format('DD.MM.YY');
+            div.appendChild(timeunit);
+
+
+            for (let index = 1; index < 25; index++) {
+
+                var timeitem = document.createElement('timeitem');
+                timeitem.innerHTML = index;
+                div.appendChild(timeitem);
+            }
+
+            tablerow.appendChild(div);
+
+        });
+
+
+
+
+
+
+
+
+
+        colIndex = 0;
+
+        //console.log(data);
+        data.forEach(element => {
+            //Zeile 
+            var tablerow = document.createElement('tablerow');
+
+            for (const key in element.table) {
+                if (Object.hasOwnProperty.call(element.table, key)) {
+                    //Zeilendaten 
+                    const element1 = element.table[key];
+
+                    var tabledata = document.createElement('tabledata');
+                    tabledata.setAttribute("colIndex", colIndex);
+
+
+                    var field
+                    //console.log(element1);
+                    switch (element1.type) {
+                        case 'String':
+                            field = document.createElement('input');
+                            field.type = 'text';
+                            field.classList.add('form');
+                            field.value = element1.value;
+                            break;
+                        case 'Option':
+                            field = document.createElement('select');
+                            // field.type = 'text';
+                            field.classList.add('form');
+
+                            options[element1.options].forEach(option => {
+                                var optionsHTML = document.createElement('option');
+                                optionsHTML.innerHTML = option
+                                field.appendChild(optionsHTML)
+                            });
+
+                            field.value = element1.value;
+                            break;
+
+                        default:
+                            field = document.createElement('input');
+                            field.type = 'text';
+                            field.classList.add('form');
+                            field.value = element1.value;
+                            break;
+                    }
+
+                    field.setAttribute("colIndex", colIndex);
+
+                    tabledata.appendChild(field);
+
+                    tabledata.style.width = `${colWidth}px`;
+                    tablerow.appendChild(tabledata);
+                }
+                colIndex++
+            }
+            colIndex = 0
+            this.table.appendChild(tablerow)
+        })
+
+
+
+
+    }
+}
 
 
 
@@ -338,10 +471,11 @@ function RenderGantt(params) {
     // diag.querySelector('left')
 
     //renderTable(document.getElementById('testtable'), data)
-    renderTable(diag.querySelector('bctable'), data)
-    renderTimeline(diag.querySelector('timeline'), data)
+    //renderTable(diag.querySelector('bctable'), data)
+    //renderTimeline(diag.querySelector('timeline'), data)
 
-
+    var gantt = new Gantt({ HTMLElement: diag, Pointer: moment('2024-06-03'), DaysBeforePointer: 4, DaysAfterPointer: 4, TimeUnit: 'day', data: jobs });
+    gantt.render();
 
 
 }

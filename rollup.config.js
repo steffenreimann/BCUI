@@ -3,6 +3,10 @@ import { terser } from "rollup-plugin-terser";
 
 const dev = {
   input: "src/script/index.js",
+  watch: {
+    include: './src/**',
+    clearScreen: false
+  },
   external: ['moment'],
   output: {
     name: "bcui",
@@ -16,7 +20,7 @@ const dev = {
     sass({
       output: true,
     }),
-  ],
+  ]
 };
 const prod = {
   input: "src/script/index.js",

@@ -13,7 +13,7 @@ timeunitwrapper {
 }
 
 timeline {
-    max-width: 60%;
+    //max-width: 60%;
     overflow-x: auto;
 
 }
@@ -27,6 +27,7 @@ timeitem {
     justify-content: center;
     top: 20px;
 }
+
 
 timeunit {
     display: flex;
