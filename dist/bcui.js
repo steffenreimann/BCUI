@@ -84,40 +84,158 @@
             this.Pointer = data.Pointer || moment();
             this.HTMLElement = data.HTMLElement;
 
-            this.header = this.HTMLElement.querySelector('header');
+            this.timeline = this.HTMLElement.querySelector('timeline');
+            this.timeline.header = this.timeline.querySelector('header');
+            this.timeline.lines = this.timeline.querySelector('lines');
             this.table = this.HTMLElement.querySelector('bctable');
 
             this.data = data.data;
+
+            this.DOMElements = {
+                table: [],
+                timeline: []
+            };
+
         }
+
+        renderNextLine(element) {
+            //console.log(data);
+            // data.forEach(element => {
+            //Zeile 
+            var tablerow = document.createElement('tablerow');
+            var timelinerow = document.createElement('tablerow');
+
+            this.DOMElements.table.push(tablerow);
+            this.DOMElements.timeline.push(timelinerow);
+
+            this.timeline.lines.appendChild(timelinerow);
+
+            //console.log(pastFutureArray);
+            this.pastFutureArray.forEach(time => {
+
+                for (let index = 1; index < 25; index++) {
+
+                    var tabledata = document.createElement('tabledata');
+                    tabledata.setAttribute("date", time.format('DD.MM.YY'));
+                    tabledata.setAttribute("colIndex", index);
+                    tabledata.setAttribute("lineIndex", element.index);
+
+                    console.log(element);
+                    console.log(time);
+                    // tabledata.innerHTML = index;
+                    timelinerow.appendChild(tabledata);
+                }
+            });
+
+
+            tablerow.onmouseover = (event) => {
+                tablerow.classList.add('hover');
+                timelinerow.classList.add('hover');
+            };
+
+            tablerow.onmouseleave = (event) => {
+                tablerow.classList.remove('hover');
+                timelinerow.classList.remove('hover');
+            };
+
+            timelinerow.onmouseover = (event) => {
+                tablerow.classList.add('hover');
+                timelinerow.classList.add('hover');
+            };
+
+
+            timelinerow.onmouseleave = (event) => {
+                tablerow.classList.remove('hover');
+                timelinerow.classList.remove('hover');
+            };
+
+
+
+
+
+
+            for (const key in element.table) {
+                if (Object.hasOwnProperty.call(element.table, key)) {
+                    //Zeilendaten 
+                    const element1 = element.table[key];
+
+                    var tabledata = document.createElement('tabledata');
+                    //tabledata.setAttribute("colIndex", colIndex);
+
+
+                    var field;
+                    //console.log(element1);
+                    switch (element1.type) {
+                        case 'String':
+                            field = document.createElement('input');
+                            field.type = 'text';
+                            field.classList.add('form');
+                            field.value = element1.value;
+                            break;
+                        case 'Option':
+                            field = document.createElement('select');
+                            // field.type = 'text';
+                            field.classList.add('form');
+
+                            options[element1.options].forEach(option => {
+                                var optionsHTML = document.createElement('option');
+                                optionsHTML.innerHTML = option;
+                                field.appendChild(optionsHTML);
+                            });
+
+                            field.value = element1.value;
+                            break;
+
+                        default:
+                            field = document.createElement('input');
+                            field.type = 'text';
+                            field.classList.add('form');
+                            field.value = element1.value;
+                            break;
+                    }
+
+                    //field.setAttribute("colIndex", colIndex);
+
+                    tabledata.appendChild(field);
+
+                    tabledata.style.width = `${this.colWidth}px`;
+                    tablerow.appendChild(tabledata);
+                }
+                //colIndex++
+            }
+            //colIndex = 0
+            this.table.appendChild(tablerow);
+            //  })
+        }
+
+
 
         render() {
 
-            console.log('dpsoijfgoisjdgoipsdfjgoi');
+            var that = {};
+
+            that.table = this.table;
+            that.timeline = this.timeline;
+
 
 
             this.table.style.display = 'grid';
 
             var cols = Object.keys(data[0].table).length;
 
-
-            // console.log(HTMLElement);
-            console.log(this.table);
-            console.log(this.table.offsetWidth);
-            console.log(getComputedStyle(this.table).width);
-
-            var colWidth = 100;
+            this.colWidth = 100;
             if (cols <= 5) {
-                colWidth = this.table.offsetWidth / cols;
+                this.colWidth = this.table.offsetWidth / cols;
             } else {
-                colWidth = this.table.offsetWidth / 5;
+                this.colWidth = this.table.offsetWidth / 5;
             }
 
-            console.log(colWidth);
-            colWidth -= 15;
 
-            console.log(colWidth);
+            this.colWidth -= 15;
 
             var tablerow = document.createElement('tablerow');
+
+
             var colIndex = 0;
             for (const key in data[0].table) {
                 if (Object.hasOwnProperty.call(data[0].table, key)) {
@@ -127,7 +245,7 @@
                     var tableheader = document.createElement('tableheader');
                     tableheader.innerHTML = element.caption;
                     tableheader.setAttribute("colIndex", colIndex);
-                    tableheader.style.width = `${colWidth}px`;
+                    tableheader.style.width = `${this.colWidth}px`;
                     const resizeBar = document.createElement('resizebar');
                     tableheader.appendChild(resizeBar);
 
@@ -145,13 +263,12 @@
 
             // Beispiel: Startpunkt heute, 5 Schritte in die Vergangenheit, 5 in die Zukunft
             //const today = moment().add(3, 'hour');
-            const pastFutureArray = createPastFutureArray(this.Pointer, this.DaysBeforePointer, this.DaysAfterPointer);
+            this.pastFutureArray = createPastFutureArray(this.Pointer, this.DaysBeforePointer, this.DaysAfterPointer);
 
             // Ausgabe (formatiert für bessere Lesbarkeit)
-            pastFutureArray.forEach(time => {
-                console.log(time.format('DD.MM.YYYY HH'));
+            this.pastFutureArray.forEach(time => {
 
-                var div = document.createElement('tableheader');
+                var div = document.createElement('timeunitwrapper');
                 var timeunit = document.createElement('timeunit');
                 timeunit.innerHTML = time.format('DD.MM.YY');
                 div.appendChild(timeunit);
@@ -164,79 +281,62 @@
                     div.appendChild(timeitem);
                 }
 
-                tablerow.appendChild(div);
+                this.timeline.header.appendChild(div);
 
             });
 
 
+            /*     this.timeline = this.HTMLElement.querySelector('timeline');
+                this.timeline.header = this.timeline.querySelector('timeline');
+                this.timeline.lines = this.timeline.querySelector('lines'); */
 
 
+            var test = getComputedStyle(this.HTMLElement);
+
+            var visableLines = this.HTMLElement.offsetHeight / 42;
 
 
-
-
+            console.log(this.HTMLElement.offsetHeight);
+            //console.log(test);
+            console.log(test.width);
+            console.log(test.height);
+            console.log(visableLines);
+            // console.log(getComputedStyle(this.HTMLElement));
 
             colIndex = 0;
 
-            //console.log(data);
-            data.forEach(element => {
-                //Zeile 
-                var tablerow = document.createElement('tablerow');
 
-                for (const key in element.table) {
-                    if (Object.hasOwnProperty.call(element.table, key)) {
-                        //Zeilendaten 
-                        const element1 = element.table[key];
+            this.timeline.onscroll = function (ev) {
+                var offset = Number(ev.target.scrollTop / 40).toFixed(0);
+                console.log('offset', offset);
+                that.table.scrollTop = ev.target.scrollTop;
 
-                        var tabledata = document.createElement('tabledata');
-                        tabledata.setAttribute("colIndex", colIndex);
+                //this.renderNextLine(element)
 
+            };
 
-                        var field;
-                        //console.log(element1);
-                        switch (element1.type) {
-                            case 'String':
-                                field = document.createElement('input');
-                                field.type = 'text';
-                                field.classList.add('form');
-                                field.value = element1.value;
-                                break;
-                            case 'Option':
-                                field = document.createElement('select');
-                                // field.type = 'text';
-                                field.classList.add('form');
-
-                                options[element1.options].forEach(option => {
-                                    var optionsHTML = document.createElement('option');
-                                    optionsHTML.innerHTML = option;
-                                    field.appendChild(optionsHTML);
-                                });
-
-                                field.value = element1.value;
-                                break;
-
-                            default:
-                                field = document.createElement('input');
-                                field.type = 'text';
-                                field.classList.add('form');
-                                field.value = element1.value;
-                                break;
-                        }
-
-                        field.setAttribute("colIndex", colIndex);
-
-                        tabledata.appendChild(field);
-
-                        tabledata.style.width = `${colWidth}px`;
-                        tablerow.appendChild(tabledata);
-                    }
-                    colIndex++;
-                }
-                colIndex = 0;
-                this.table.appendChild(tablerow);
-            });
+            this.table.onscroll = function (ev) {
+                console.log('ev.target.scrollTop', ev.target.scrollTop);
+                that.timeline.scrollTop = ev.target.scrollTop;
 
 
+
+
+            };
+
+            this.timeline.onclick = function (ev) {
+                console.log(ev.target);
+
+
+
+            };
+
+
+            for (let index = 0; index < visableLines + 1; index++) {
+                const element = data[index];
+                element.index = index;
+                this.renderNextLine(element);
+            }
 
 
         }
@@ -332,7 +432,30 @@
     function RenderGantt(params) {
 
 
-        console.log(moment().format());
+        for (let index = 0; index < 40; index++) {
+
+
+            var testdata = {
+                table: {
+                    id: { value: 3 },
+                    age: { value: 30 },
+                    city: { value: 'Hamburg', type: 'Option', options: 'cities' },
+                    test: { value: 'New York' }
+                },
+                timeline: {
+                    start: '2024-06-03',
+                    end: '2024-06-14',
+                    name: 'TEST',
+                    desc: 'TEST',
+                    id: 'key1'
+                }
+            };
+
+            data.push(testdata);
+
+
+        }
+
 
         var diag = document.querySelector('bcgantt');
 

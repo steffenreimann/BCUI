@@ -114,7 +114,7 @@ async function build() {
         // closes the bundle
         await bundle.close();
     }
-    return bundle.watchFiles
+    //return bundle.watchFiles
     //process.exit(buildFailed ? 1 : 0);
 }
 
