@@ -357,6 +357,18 @@
 
 
                         //times[line].start.compare(times[line].end)
+                        times[line].elementsline = [];
+
+                        times[line].elementsline.push(times[line].start);
+
+
+                        /*                     while (hour date) {
+                        
+                                                var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`
+                                                var HTMLE = document.querySelector(htmlkey)
+                                            } */
+
+
 
 
 

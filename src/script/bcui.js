@@ -473,11 +473,11 @@ class Gantt {
                     times[line].elementsline.push(times[line].start)
 
 
-                    while (hour date) {
-
-                        var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`
-                        var HTMLE = document.querySelector(htmlkey)
-                    }
+                    /*                     while (hour date) {
+                    
+                                            var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`
+                                            var HTMLE = document.querySelector(htmlkey)
+                                        } */
 
 
 
