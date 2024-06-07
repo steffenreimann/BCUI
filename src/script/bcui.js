@@ -207,6 +207,8 @@ class Gantt {
             timeline: []
         };
 
+        this.times = {}
+
     }
 
     renderNextLine(element) {
@@ -435,12 +437,65 @@ class Gantt {
 
         };
 
+        var times = {}
         this.timeline.onclick = function (ev) {
-            console.log(ev.target);
+            var line = ev.target.getAttribute('lineindex')
+            var hour = ev.target.getAttribute('colindex')
+            var date = ev.target.getAttribute('date')
+            var jsonkey = `${date},${hour},${line}`
+            var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`
+            var HTMLE = document.querySelector(htmlkey)
+            console.log(htmlkey)
+            console.log(jsonkey)
 
+            console.log(ev.target);
+            console.log(HTMLE);
+            console.log();
+
+
+
+            console.log(times[line]);
+
+
+            if (times[line] == undefined) {
+                console.log('Set Start');
+
+                times[line] = { start: new Point(ev.target, line, hour, date, 0) }
+            } else {
+                if (times[line].end == undefined) {
+                    console.log('Set End');
+                    times[line].end = new Point(ev.target, line, hour, date, 0)
+
+
+                    //times[line].start.compare(times[line].end)
+                    times[line].elementsline = []
+
+                    times[line].elementsline.push(times[line].start)
+
+
+                    while (hour date) {
+
+                        var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`
+                        var HTMLE = document.querySelector(htmlkey)
+                    }
+
+
+
+
+
+                } else {
+                    times[line] = { start: new Point(ev.target, line, hour, date, 0) }
+                }
+
+            }
+
+
+            console.log(times[line]);
 
 
         }
+
+
 
 
         for (let index = 0; index < visableLines + 1; index++) {
@@ -454,7 +509,20 @@ class Gantt {
 }
 
 
+class Point {
+    constructor(html, line, hour, date, minute) {
+        this.html = html;
+        this.line = line;
+        this.hour = hour;
+        this.date = date;
+        this.minute = minute;
 
+    }
+    GetDateTime() {
+        return moment(`${this.date} ${this.hour}:${this.minute}}`);
+    }
+
+}
 
 function getControlAddin(params) {
     return document.getElementById('controlAddIn');
