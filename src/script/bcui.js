@@ -449,6 +449,7 @@ class Gantt {
             console.log(jsonkey)
 
             console.log(ev.target);
+            console.log(ev.target.parentElement);
             console.log(HTMLE);
             console.log();
 
@@ -479,9 +480,23 @@ class Gantt {
                                             var HTMLE = document.querySelector(htmlkey)
                                         } */
 
+                    console.log(ev.target.offsetLeft);
+                    console.log(ev.target.offsetTop);
+                    console.log(ev.target.getBoundingClientRect());
 
+                    var timeitemtest = document.createElement('timeitemtest');
+                    ev.target.parentElement.appendChild(timeitemtest);
 
+                    var elementRect = times[line].start.html.getBoundingClientRect();
+                    var parentRect = times[line].start.html.parentElement.getBoundingClientRect();
+                    var xPosRelative = elementRect.left - parentRect.left;
+                    var yPosRelative = elementRect.top - parentRect.top;
 
+                    timeitemtest.style.top = yPosRelative
+                    timeitemtest.style.left = xPosRelative
+                    timeitemtest.style.backgroundColor = 'red';
+                    timeitemtest.style.width = '19px'
+                    console.log(timeitemtest);
 
                 } else {
                     times[line] = { start: new Point(ev.target, line, hour, date, 0) }
@@ -508,6 +523,10 @@ class Gantt {
     }
 }
 
+
+function Next(params) {
+
+}
 
 class Point {
     constructor(html, line, hour, date, minute) {
@@ -656,7 +675,7 @@ function RenderGantt(params) {
     //renderTable(diag.querySelector('bctable'), data)
     //renderTimeline(diag.querySelector('timeline'), data)
 
-    var gantt = new Gantt({ HTMLElement: diag, Pointer: moment('2024-06-03'), DaysBeforePointer: 4, DaysAfterPointer: 4, TimeUnit: 'day', data: jobs });
+    var gantt = new Gantt({ HTMLElement: diag, Pointer: moment(), DaysBeforePointer: 4, DaysAfterPointer: 4, TimeUnit: 'day', data: jobs });
     gantt.render();
 
 
