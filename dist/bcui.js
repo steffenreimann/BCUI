@@ -340,6 +340,7 @@
                 console.log(jsonkey);
 
                 console.log(ev.target);
+                console.log(ev.target.parentElement);
                 console.log(HTMLE);
                 console.log();
 
@@ -427,7 +428,6 @@
 
         }
     }
-
 
     class Point {
         constructor(html, line, hour, date, minute) {
@@ -567,7 +567,7 @@
         //renderTable(diag.querySelector('bctable'), data)
         //renderTimeline(diag.querySelector('timeline'), data)
 
-        var gantt = new Gantt({ HTMLElement: diag, Pointer: moment('2024-06-03'), DaysBeforePointer: 4, DaysAfterPointer: 4, TimeUnit: 'day', data: jobs });
+        var gantt = new Gantt({ HTMLElement: diag, Pointer: moment(), DaysBeforePointer: 4, DaysAfterPointer: 4, TimeUnit: 'day', data: jobs });
         gantt.render();
 
 
