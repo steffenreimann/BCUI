@@ -438,7 +438,9 @@ class Gantt {
         };
 
         var times = {}
-        this.timeline.onclick = function (ev) {
+
+        this.timeline.querySelector('lines').onclick = function (ev) {
+            // this.timeline.onclick = function (ev) {
             var line = ev.target.getAttribute('lineindex')
             var hour = ev.target.getAttribute('colindex')
             var date = ev.target.getAttribute('date')
@@ -472,16 +474,45 @@ class Gantt {
 
                     times[line].elementsline.push(times[line].start)
 
-
-                    /*                     while (hour date) {
-                    
-                                            var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`
-                                            var HTMLE = document.querySelector(htmlkey)
-                                        } */
+                    //times[line].end.hour == times[line].end.date
 
 
 
 
+                    var start = times[line].start
+                    var end = times[line].end
+
+                    var starttime = moment(start.date)
+                    var endtime = moment(end.date)
+
+
+                    console.log(times[line]);
+                    console.log(starttime);
+                    console.log(endtime);
+                    console.log(endtime.isBefore(starttime));
+
+
+                    if (endtime.isBefore(starttime)) {
+                        //change start and end
+                        var temp = times[line].start
+                        console.log(temp);
+                        console.log(times[line].start);
+                        console.log(times[line].end);
+                        times[line].start = times[line].end
+                        times[line].end = temp
+                    }
+
+                    console.log(times[line]);
+
+                    var currentElemnt = times[line].start.html;
+                    currentElemnt.style.backgroundColor = 'red';
+
+                    while (currentElemnt != times[line].end.html) {
+
+                        currentElemnt = currentElemnt.nextSibling
+                        //console.log(currentElemnt);
+                        currentElemnt.style.backgroundColor = 'red';
+                    }
 
                 } else {
                     times[line] = { start: new Point(ev.target, line, hour, date, 0) }
