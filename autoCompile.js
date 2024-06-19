@@ -6,7 +6,10 @@ const rollup = require('rollup').rollup;
 var renderBegin = new Date();
 var sassCompileFiles = ['bcui'];
 var liveServer = require("live-server");
+var typescript = require("rollup-plugin-typescript");
 /* import { rollup } from 'rollup'; */
+//import typescript from 'rollup-plugin-typescript';
+
 
 
 async function renderSCSS(reloadClients) {
@@ -80,7 +83,10 @@ async function buildAll() {
 
 // see below for details on these options
 const inputOptions = {
-    input: "src/script/bcui.js"
+    input: "src/script/bcui.ts",
+    plugins: [
+        typescript()
+    ]
 };
 
 // you can create multiple outputs from the same input to generate e.g.
@@ -97,6 +103,14 @@ async function build() {
     let bundle;
     let buildFailed = false;
     try {
+
+
+
+        //  tsc ./src/script/bcui.ts util.ts --target commonjs --outfile ./dist/bcui.js
+
+
+
+        spawn
         // create a bundle
         bundle = await rollup(inputOptions);
 

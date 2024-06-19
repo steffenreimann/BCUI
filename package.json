@@ -23,8 +23,11 @@
   "author": "Steffen Reimann",
   "license": "MIT",
   "devDependencies": {
+    "live-server": "^1.2.2",
     "rollup": "^2.70.2",
-    "live-server": "^1.2.2"
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5",
+    "webpack-cli": "^5.1.4"
   },
   "eslintIgnore": [
     "dist"
@@ -32,6 +35,7 @@
   "dependencies": {
     "chokidar": "^3.6.0",
     "moment": "^2.30.1",
-    "node-sass": "^9.0.0"
+    "node-sass": "^9.0.0",
+    "rollup-plugin-typescript": "^1.0.1"
   }
 }

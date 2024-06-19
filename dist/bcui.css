@@ -453,6 +453,9 @@ bcgantt timeline lines tabledata {
   border-bottom: 1px solid var(--color-border);
   border-left: 1px solid var(--color-border); }
 
+.picked {
+  background-color: gray; }
+
 /* 
 bcgantt timeline lines tabledata:hover {
     background-color: #909090;

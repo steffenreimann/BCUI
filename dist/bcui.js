@@ -1,578 +1,360 @@
-(function () {
-    'use strict';
-
-    //import moment from 'moment';
-
-
-    const tables = document.querySelectorAll('table');
-    var header;
-
-    tables.forEach(table => {
-        const headerCells = table.querySelectorAll('th');
-
-        headerCells.forEach(headerCell => {
-
-            const resizeBar = document.createElement('resizebar');
-            headerCell.appendChild(resizeBar);
-
-            resizeBar.addEventListener('mousedown', startResize);
+//import moment from 'moment';
+import * as moment from 'moment';
+import { testdata } from './testdata';
+function createPastFutureArray(startMoment, stepsPast, stepsFuture, interval) {
+    const timeArray = [];
+    // Zeitpunkte in die Vergangenheit
+    for (let i = stepsPast; i > 0; i--) {
+        timeArray.push(startMoment.clone().subtract(i, interval));
+    }
+    // Startzeitpunkt
+    timeArray.push(startMoment);
+    // Zeitpunkte in die Zukunft
+    for (let i = 1; i <= stepsFuture; i++) {
+        timeArray.push(startMoment.clone().add(i, interval));
+    }
+    return timeArray;
+}
+var TimeUnits;
+(function (TimeUnits) {
+    TimeUnits[TimeUnits["Hour"] = 0] = "Hour";
+    TimeUnits[TimeUnits["Day"] = 1] = "Day";
+    TimeUnits[TimeUnits["Week"] = 2] = "Week";
+    TimeUnits[TimeUnits["Month"] = 3] = "Month";
+})(TimeUnits || (TimeUnits = {}));
+class Gantt {
+    constructor(data, RootElement, DaysBeforePointer, DaysAfterPointer, TimeUnit, Pointer) {
+        this.DaysBeforePointer = DaysBeforePointer || 4;
+        this.DaysAfterPointer = DaysAfterPointer || 4;
+        this.TimeUnit = TimeUnit || TimeUnits.Hour;
+        this.Pointer = Pointer || moment();
+        this.HTMLElement = RootElement;
+        this.timeline = this.HTMLElement.querySelector('timeline');
+        this.timelineHeader = this.timeline.querySelector('header');
+        this.timelineLines = this.timeline.querySelector('lines');
+        this.table = this.HTMLElement.querySelector('bctable');
+        this.data = data;
+        this.TableElements = [];
+        this.TimelineElements = [];
+        this.PastFutureArray = [];
+    }
+    renderNextLine(element, LineIndex) {
+        //console.log(data);
+        // data.forEach(element => {
+        //Zeile 
+        var tablerow = document.createElement('tablerow');
+        var timelinerow = document.createElement('tablerow');
+        this.TableElements.push(tablerow);
+        this.TimelineElements.push(timelinerow);
+        this.timelineLines.appendChild(timelinerow);
+        //console.log(pastFutureArray);
+        this.PastFutureArray.forEach(time => {
+            for (let index = 1; index < 25; index++) {
+                var tabledata = document.createElement('tabledata');
+                tabledata.setAttribute("date", time.format('DD.MM.YY'));
+                tabledata.setAttribute("colIndex", index.toString());
+                tabledata.setAttribute("lineIndex", LineIndex.toString());
+                //console.log(element);
+                //console.log(time);
+                // tabledata.innerHTML = index;
+                timelinerow.appendChild(tabledata);
+            }
         });
-
-
-    });
-
-    function startResize(e) {
-        header = e.currentTarget.parentElement;
-
-
-
-        e.clientX;
-        document.addEventListener('mousemove', moveResize);
-        document.addEventListener('mouseup', stopResize);
-
-        function moveResize(e) {
-
-            header.style.width = e.clientX - header.offsetLeft - 8;
-            var colIndex = header.getAttribute('colIndex');
-
-            var colstoupdate = document.querySelectorAll('[colindex="' + colIndex + '"]');
-            colstoupdate.forEach(coltoupdate => {
-                coltoupdate.style.width = e.clientX - header.offsetLeft - 8;
+        tablerow.onmouseover = (event) => {
+            tablerow.classList.add('hover');
+            timelinerow.classList.add('hover');
+        };
+        tablerow.onmouseleave = (event) => {
+            tablerow.classList.remove('hover');
+            timelinerow.classList.remove('hover');
+        };
+        timelinerow.onmouseover = (event) => {
+            tablerow.classList.add('hover');
+            timelinerow.classList.add('hover');
+        };
+        timelinerow.onmouseleave = (event) => {
+            tablerow.classList.remove('hover');
+            timelinerow.classList.remove('hover');
+        };
+        var colIndex = 0;
+        element.forEach(GanttLineItem => {
+            var tabledata = document.createElement('tabledata');
+            tabledata.setAttribute("colIndex", colIndex.toString());
+            var field;
+            //console.log(element1);
+            switch (GanttLineItem.FieldType) {
+                case 'String' || 'Code':
+                    field = document.createElement('input');
+                    // field.type = 'text';
+                    field.inputMode = 'text';
+                    field.classList.add('form');
+                    field.value = GanttLineItem.FieldValue;
+                    break;
+                default:
+                    field = document.createElement('input');
+                    field.type = 'text';
+                    field.classList.add('form');
+                    field.value = GanttLineItem.FieldValue;
+                    break;
+            }
+            //field.setAttribute("colIndex", colIndex);
+            tabledata.appendChild(field);
+            //tabledata.style.width = `${this.colWidth}px`;
+            tablerow.appendChild(tabledata);
+            colIndex++;
+        });
+        colIndex = 0;
+        this.table.appendChild(tablerow);
+        //this.table.appendChild(tablerow)
+        //  })
+    }
+    /*     AddGanttElement(time) {
+            console.log('Add Gantt Element');
+            console.log(time);
+    
+            time.elementsline.forEach(line => {
+    
+                console.log(line);
+                // line.style.backgroundColor = 'gray'
+                line.classList.add('picked')
+    
             });
+    
+        }
+        RemoveGanttElement(time) {
+            console.log('Remove Gantt Element');
+            console.log(time);
+    
+            time.elementsline.forEach(line => {
+    
+                console.log(line);
+                line.classList.remove('picked')
+    
+            });
+    
+        } */
+    getStartFieldInLine(Line) {
+        Line.forEach(LineItem => {
+            if (LineItem.StartEnd.toUpperCase() == 'START') {
+                return LineItem;
+            }
+        });
+    }
+    getEndFieldInLine(Line) {
+        Line.forEach(LineItem => {
+            if (LineItem.StartEnd.toUpperCase() == 'END') {
+                return LineItem;
+            }
+        });
+    }
+    /* onclickTimeline(ev: MouseEvent) {
+        console.log('click', this);
+        // this.timeline.onclick = function (ev) {
+        var target: HTMLElement = ev.target as HTMLElement;
+        var line: number = parseInt(target.getAttribute('lineindex')!);
+        var hour = target.getAttribute('colindex')
+        var date = target.getAttribute('date')
+        var jsonkey = `${date},${hour},${line}`
+        var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`
+        var HTMLE = document.querySelector(htmlkey)
+
+        var startField: GanttLineItem = this.getStartFieldInLine(this.data[line])!
+        var starttime = moment(startField.FieldValue)
+
+        if (startField.FieldValue) {
+
 
         }
 
+
+        if (this.times[line] == undefined) {
+            console.log('Set Start');
+
+            this.times[line] = { start: new Point(ev.target, line, hour, date, 0) }
+        } else {
+            if (this.times[line].end == undefined) {
+                console.log('Set End');
+                this.times[line].end = new Point(ev.target, line, hour, date, 0)
+                ev.target.classList.add('picked')
+                this.times[line].elementsline = []
+
+                this.times[line].elementsline.push(this.times[line].start.html)
+
+                var start = this.times[line].start
+                var end = this.times[line].end
+                //moment("12-25-1995", "MM-DD-YYYY");
+                var starttime = moment(start.date + ' ' + start.hour, "DD-MM-YYYY hh")
+                var endtime = moment(end.date + ' ' + end.hour, "DD-MM-YYYY hh")
+
+                if (endtime.isBefore(starttime)) {
+                    console.log('End is before Start... Change Start and End');
+                    var temp = this.times[line].start
+                    this.times[line].start = this.times[line].end
+                    this.times[line].end = temp
+                }
+
+                var currentElemnt = this.times[line].start.html;
+                this.times[line].elementsline.push(currentElemnt)
+
+                while (currentElemnt != this.times[line].end.html) {
+                    console.log('push');
+                    currentElemnt = currentElemnt.nextSibling
+                    this.times[line].elementsline.push(currentElemnt)
+                }
+                console.log('End Setted');
+                this.AddGanttElement(this.times[line])
+            } else {
+                this.RemoveGanttElement(this.times[line])
+
+                this.times[line] = { start: new Point(ev.target, line, hour, date, 0) }
+            }
+
+        }
+
+
+        console.log(this.times[line]);
+
+    } */
+    Resize(ev) {
+        var elem = ev.currentTarget;
+        var header = elem.parentElement;
+        document.addEventListener('mousemove', moveResize);
+        document.addEventListener('mouseup', stopResize);
+        function moveResize(e) {
+            header.style.width = (e.clientX - header.offsetLeft - 8).toString();
+            var colIndex = header.getAttribute('colIndex');
+            var colstoupdate = header.parentElement.parentElement.querySelectorAll('[colindex="' + colIndex + '"]');
+            colstoupdate.forEach(coltoupdate => {
+                coltoupdate.style.width = (e.clientX - header.offsetLeft - 8).toString();
+            });
+        }
         function stopResize() {
             document.removeEventListener('mousemove', moveResize);
             document.removeEventListener('mouseup', stopResize);
         }
     }
-
-
-
-
-
-    function createPastFutureArray(startMoment, stepsPast, stepsFuture, interval = 'day') {
-        const timeArray = [];
-
-        // Zeitpunkte in die Vergangenheit
-        for (let i = stepsPast; i > 0; i--) {
-            timeArray.push(startMoment.clone().subtract(i, interval));
+    render() {
+        this.table.style.display = 'grid';
+        var cols = Object.keys(this.data[0]).length;
+        var colWidth = 100;
+        if (cols <= 5) {
+            colWidth = this.table.offsetWidth / cols;
         }
-
-        // Startzeitpunkt
-        timeArray.push(startMoment);
-
-        // Zeitpunkte in die Zukunft
-        for (let i = 1; i <= stepsFuture; i++) {
-            timeArray.push(startMoment.clone().add(i, interval));
+        else {
+            colWidth = this.table.offsetWidth / 5;
         }
-
-        return timeArray;
-    }
-
-
-
-
-
-    class Gantt {
-
-        constructor(data) {
-            this.DaysBeforePointer = data.DaysBeforePointer || 4;
-            this.DaysAfterPointer = data.DaysAfterPointer || 4;
-            this.TimeUnit = data.TimeUnit || 'day';
-            this.Pointer = data.Pointer || moment();
-            this.HTMLElement = data.HTMLElement;
-
-            this.timeline = this.HTMLElement.querySelector('timeline');
-            this.timeline.header = this.timeline.querySelector('header');
-            this.timeline.lines = this.timeline.querySelector('lines');
-            this.table = this.HTMLElement.querySelector('bctable');
-
-            this.data = data.data;
-
-            this.DOMElements = {
-                table: [],
-                timeline: []
-            };
-
-            this.times = {};
-
-        }
-
-        renderNextLine(element) {
-            //console.log(data);
-            // data.forEach(element => {
-            //Zeile 
-            var tablerow = document.createElement('tablerow');
-            var timelinerow = document.createElement('tablerow');
-
-            this.DOMElements.table.push(tablerow);
-            this.DOMElements.timeline.push(timelinerow);
-
-            this.timeline.lines.appendChild(timelinerow);
-
-            //console.log(pastFutureArray);
-            this.pastFutureArray.forEach(time => {
-
-                for (let index = 1; index < 25; index++) {
-
-                    var tabledata = document.createElement('tabledata');
-                    tabledata.setAttribute("date", time.format('DD.MM.YY'));
-                    tabledata.setAttribute("colIndex", index);
-                    tabledata.setAttribute("lineIndex", element.index);
-
-                    console.log(element);
-                    console.log(time);
-                    // tabledata.innerHTML = index;
-                    timelinerow.appendChild(tabledata);
-                }
+        colWidth -= 15;
+        var tablerow = document.createElement('tablerow');
+        var colIndex = 0;
+        this.data[0].forEach(GanttLineItem => {
+            var tableheader = document.createElement('tableheader');
+            tableheader.innerHTML = GanttLineItem.FieldCaption;
+            tableheader.setAttribute("colIndex", colIndex.toString());
+            tableheader.style.width = `${colWidth}px`;
+            const resizeBar = document.createElement('resizebar');
+            tableheader.appendChild(resizeBar);
+            resizeBar.addEventListener('mousedown', (ev) => {
+                this.Resize(ev);
             });
-
-
-            tablerow.onmouseover = (event) => {
-                tablerow.classList.add('hover');
-                timelinerow.classList.add('hover');
-            };
-
-            tablerow.onmouseleave = (event) => {
-                tablerow.classList.remove('hover');
-                timelinerow.classList.remove('hover');
-            };
-
-            timelinerow.onmouseover = (event) => {
-                tablerow.classList.add('hover');
-                timelinerow.classList.add('hover');
-            };
-
-
-            timelinerow.onmouseleave = (event) => {
-                tablerow.classList.remove('hover');
-                timelinerow.classList.remove('hover');
-            };
-
-
-
-
-
-
-            for (const key in element.table) {
-                if (Object.hasOwnProperty.call(element.table, key)) {
-                    //Zeilendaten 
-                    const element1 = element.table[key];
-
-                    var tabledata = document.createElement('tabledata');
-                    //tabledata.setAttribute("colIndex", colIndex);
-
-
-                    var field;
-                    //console.log(element1);
-                    switch (element1.type) {
-                        case 'String':
-                            field = document.createElement('input');
-                            field.type = 'text';
-                            field.classList.add('form');
-                            field.value = element1.value;
-                            break;
-                        case 'Option':
-                            field = document.createElement('select');
-                            // field.type = 'text';
-                            field.classList.add('form');
-
-                            options[element1.options].forEach(option => {
-                                var optionsHTML = document.createElement('option');
-                                optionsHTML.innerHTML = option;
-                                field.appendChild(optionsHTML);
-                            });
-
-                            field.value = element1.value;
-                            break;
-
-                        default:
-                            field = document.createElement('input');
-                            field.type = 'text';
-                            field.classList.add('form');
-                            field.value = element1.value;
-                            break;
-                    }
-
-                    //field.setAttribute("colIndex", colIndex);
-
-                    tabledata.appendChild(field);
-
-                    tabledata.style.width = `${this.colWidth}px`;
-                    tablerow.appendChild(tabledata);
-                }
-                //colIndex++
-            }
-            //colIndex = 0
+            tablerow.appendChild(tableheader);
             this.table.appendChild(tablerow);
-            //  })
-        }
-
-
-
-        render() {
-
-            var that = {};
-
-            that.table = this.table;
-            that.timeline = this.timeline;
-
-
-
-            this.table.style.display = 'grid';
-
-            var cols = Object.keys(data[0].table).length;
-
-            this.colWidth = 100;
-            if (cols <= 5) {
-                this.colWidth = this.table.offsetWidth / cols;
-            } else {
-                this.colWidth = this.table.offsetWidth / 5;
-            }
-
-
-            this.colWidth -= 15;
-
-            var tablerow = document.createElement('tablerow');
-
-
-            var colIndex = 0;
-            for (const key in data[0].table) {
-                if (Object.hasOwnProperty.call(data[0].table, key)) {
-                    const element = data[0].table[key];
-                    //console.log(key, element);
-
-                    var tableheader = document.createElement('tableheader');
-                    tableheader.innerHTML = element.caption;
-                    tableheader.setAttribute("colIndex", colIndex);
-                    tableheader.style.width = `${this.colWidth}px`;
-                    const resizeBar = document.createElement('resizebar');
-                    tableheader.appendChild(resizeBar);
-
-                    resizeBar.addEventListener('mousedown', startResize);
-
-                    tablerow.appendChild(tableheader);
-                    this.table.appendChild(tablerow);
-                    colIndex++;
-                }
-            }
-
-
-
-
-
-            // Beispiel: Startpunkt heute, 5 Schritte in die Vergangenheit, 5 in die Zukunft
-            //const today = moment().add(3, 'hour');
-            this.pastFutureArray = createPastFutureArray(this.Pointer, this.DaysBeforePointer, this.DaysAfterPointer);
-
-            // Ausgabe (formatiert für bessere Lesbarkeit)
-            this.pastFutureArray.forEach(time => {
-
-                var div = document.createElement('timeunitwrapper');
-                var timeunit = document.createElement('timeunit');
-                timeunit.innerHTML = time.format('DD.MM.YY');
-                div.appendChild(timeunit);
-
-
-                for (let index = 1; index < 25; index++) {
-
-                    var timeitem = document.createElement('timeitem');
-                    timeitem.innerHTML = index;
-                    div.appendChild(timeitem);
-                }
-
-                this.timeline.header.appendChild(div);
-
-            });
-
-
-            /*     this.timeline = this.HTMLElement.querySelector('timeline');
-                this.timeline.header = this.timeline.querySelector('timeline');
-                this.timeline.lines = this.timeline.querySelector('lines'); */
-
-
-            var test = getComputedStyle(this.HTMLElement);
-
-            var visableLines = this.HTMLElement.offsetHeight / 42;
-
-
-            console.log(this.HTMLElement.offsetHeight);
-            //console.log(test);
-            console.log(test.width);
-            console.log(test.height);
-            console.log(visableLines);
-            // console.log(getComputedStyle(this.HTMLElement));
-
-            colIndex = 0;
-
-
-            this.timeline.onscroll = function (ev) {
-                var offset = Number(ev.target.scrollTop / 40).toFixed(0);
-                console.log('offset', offset);
-                that.table.scrollTop = ev.target.scrollTop;
-
-                //this.renderNextLine(element)
-
-            };
-
-            this.table.onscroll = function (ev) {
-                console.log('ev.target.scrollTop', ev.target.scrollTop);
-                that.timeline.scrollTop = ev.target.scrollTop;
-
-
-
-
-            };
-
-            var times = {};
-
-            this.timeline.querySelector('lines').onclick = function (ev) {
-                // this.timeline.onclick = function (ev) {
-                var line = ev.target.getAttribute('lineindex');
-                var hour = ev.target.getAttribute('colindex');
-                var date = ev.target.getAttribute('date');
-                var jsonkey = `${date},${hour},${line}`;
-                var htmlkey = `[date="${date}"][colindex="${hour}"][lineindex="${line}"]`;
-                var HTMLE = document.querySelector(htmlkey);
-                console.log(htmlkey);
-                console.log(jsonkey);
-
-                console.log(ev.target);
-                console.log(ev.target.parentElement);
-                console.log(HTMLE);
-                console.log();
-
-
-
-                console.log(times[line]);
-
-
-                if (times[line] == undefined) {
-                    console.log('Set Start');
-
-                    times[line] = { start: new Point(ev.target, line, hour, date, 0) };
-                } else {
-                    if (times[line].end == undefined) {
-                        console.log('Set End');
-                        times[line].end = new Point(ev.target, line, hour, date, 0);
-
-
-                        //times[line].start.compare(times[line].end)
-                        times[line].elementsline = [];
-
-                        times[line].elementsline.push(times[line].start);
-
-                        //times[line].end.hour == times[line].end.date
-
-
-
-
-                        var start = times[line].start;
-                        var end = times[line].end;
-
-                        var starttime = moment(start.date);
-                        var endtime = moment(end.date);
-
-
-                        console.log(times[line]);
-                        console.log(starttime);
-                        console.log(endtime);
-                        console.log(endtime.isBefore(starttime));
-
-
-                        if (endtime.isBefore(starttime)) {
-                            //change start and end
-                            var temp = times[line].start;
-                            console.log(temp);
-                            console.log(times[line].start);
-                            console.log(times[line].end);
-                            times[line].start = times[line].end;
-                            times[line].end = temp;
-                        }
-
-                        console.log(times[line]);
-
-                        var currentElemnt = times[line].start.html;
-                        currentElemnt.style.backgroundColor = 'red';
-
-                        while (currentElemnt != times[line].end.html) {
-
-                            currentElemnt = currentElemnt.nextSibling;
-                            //console.log(currentElemnt);
-                            currentElemnt.style.backgroundColor = 'red';
-                        }
-
-                    } else {
-                        times[line] = { start: new Point(ev.target, line, hour, date, 0) };
+            colIndex++;
+        });
+        /*         for (const key in this.data[0][0]) {
+                    if (Object.hasOwnProperty.call(this.data[0][0], key)) {
+                        const element = this.data[0][0][key];
+                        //console.log(key, element);
+        
+                        var tableheader = document.createElement('tableheader');
+                        tableheader.innerHTML = element.Caption;
+                        tableheader.setAttribute("colIndex", colIndex.toString());
+                        tableheader.style.width = `${colWidth}px`;
+                        const resizeBar = document.createElement('resizebar');
+                        tableheader.appendChild(resizeBar)
+        
+                        resizeBar.addEventListener('mousedown', (ev) => {
+                            this.Resize(ev)
+                        });
+        
+                        tablerow.appendChild(tableheader);
+                        this.table!.appendChild(tablerow)
+                        colIndex++
                     }
-
-                }
-
-
-                console.log(times[line]);
-
-
-            };
-
-
-
-
-            for (let index = 0; index < visableLines + 1; index++) {
-                const element = data[index];
-                element.index = index;
-                this.renderNextLine(element);
+                } */
+        // Beispiel: Startpunkt heute, 5 Schritte in die Vergangenheit, 5 in die Zukunft
+        //const today = moment().add(3, 'hour');
+        this.PastFutureArray = createPastFutureArray(this.Pointer, this.DaysBeforePointer, this.DaysAfterPointer, 'day');
+        // Ausgabe (formatiert für bessere Lesbarkeit)
+        this.PastFutureArray.forEach(time => {
+            var div = document.createElement('timeunitwrapper');
+            var timeunit = document.createElement('timeunit');
+            timeunit.innerHTML = time.format('DD.MM.YY');
+            div.appendChild(timeunit);
+            for (let index = 1; index < 25; index++) {
+                var timeitem = document.createElement('timeitem');
+                timeitem.innerHTML = index.toString();
+                div.appendChild(timeitem);
             }
-
-
+            this.timelineHeader.appendChild(div);
+        });
+        /*     this.timeline = this.HTMLElement.querySelector('timeline');
+            this.timeline.header = this.timeline.querySelector('timeline');
+            this.timeline.lines = this.timeline.querySelector('lines'); */
+        var test = getComputedStyle(this.HTMLElement);
+        var visableLines = this.HTMLElement.offsetHeight / 42;
+        console.log(this.HTMLElement.offsetHeight);
+        //console.log(test);
+        console.log(test.width);
+        console.log(test.height);
+        console.log(visableLines);
+        // console.log(getComputedStyle(this.HTMLElement));
+        colIndex = 0;
+        this.timeline.onscroll = (ev) => {
+            const target = ev.target;
+            var offset = Number(target.scrollTop / 40).toFixed(0);
+            console.log('offset', offset);
+            this.table.scrollTop = target.scrollTop;
+            //this.renderNextLine(element)
+        };
+        this.table.onscroll = (ev) => {
+            const target = ev.target;
+            console.log('ev.target.scrollTop', target.scrollTop);
+            this.timeline.scrollTop = target.scrollTop;
+        };
+        const lines = this.timeline.querySelector('lines');
+        lines.onclick = (ev) => {
+            // this.onclickTimeline(ev);
+        };
+        for (let index = 0; index < visableLines + 1; index++) {
+            const Ganttline = this.data[index];
+            this.renderNextLine(Ganttline, index);
         }
     }
-
-    class Point {
-        constructor(html, line, hour, date, minute) {
-            this.html = html;
-            this.line = line;
-            this.hour = hour;
-            this.date = date;
-            this.minute = minute;
-
-        }
-        GetDateTime() {
-            return moment(`${this.date} ${this.hour}:${this.minute}}`);
-        }
-
+}
+class Point {
+    constructor(html, hour, date, minute) {
+        this.html = html;
+        this.hour = hour;
+        this.date = date;
+        this.minute = minute;
     }
-
-
-
-    var data = [
-        {
-            table: {
-                id: { value: 1, caption: 'ID', type: 'String' },
-                age: { value: 25, caption: 'Alter' },
-                city: { value: 'Hamburg', caption: 'City', type: 'Option', options: 'cities' },
-                test: { value: 'DE', caption: 'Land' }
-            },
-            timeline: [
-                {
-                    start: '2024-06-03',
-                    end: '2024-06-14',
-                    name: 'TEST',
-                    desc: 'TEST',
-                    id: 'key1'
-                },
-                {
-                    start: '2024-06-03',
-                    end: '2024-06-14',
-                    name: 'TEST',
-                    desc: 'TEST',
-                    id: 'key1'
-                }
-            ]
-        },
-        {
-            table: {
-                id: { value: 2, caption: 'ID' },
-                age: { value: 35, caption: 'Alter' },
-                city: { value: 'Hamburg', type: 'Option', options: 'cities' },
-                test: { value: 'Hamburg' }
-            },
-            timeline: {
-                start: '2024-06-03',
-                end: '2024-06-14',
-                name: 'TEST',
-                desc: 'TEST',
-                id: 'key1'
-            }
-        },
-        {
-            table: {
-                id: { value: 3 },
-                age: { value: 30 },
-                city: { value: 'Hamburg', type: 'Option', options: 'cities' },
-                test: { value: 'New York' }
-            },
-            timeline: {
-                start: '2024-06-03',
-                end: '2024-06-14',
-                name: 'TEST',
-                desc: 'TEST',
-                id: 'key1'
-            }
-        }
-    ];
-
-    var options = {
-        cities: ['London', 'Hamburg', 'New York']
-    };
-
-    //new Date('2024-06-03 19:23:11')
-
-    let jobs = [
-        {
-            start: '2024-06-03',
-            end: '2024-06-14',
-            name: 'TEST',
-            desc: 'TEST',
-            id: 'key1',
-            subjobs: [
-                {
-                    start: '2024-06-03',
-                    end: '2024-06-14',
-                    name: 'TEST',
-                    desc: 'TEST',
-                    id: 'key2',
-                    subjobs: [
-
-                    ]
-                }
-            ]
-        }
-    ];
-
-    function RenderGantt(params) {
-
-
-        for (let index = 0; index < 40; index++) {
-
-
-            var testdata = {
-                table: {
-                    id: { value: 3 },
-                    age: { value: 30 },
-                    city: { value: 'Hamburg', type: 'Option', options: 'cities' },
-                    test: { value: 'New York' }
-                },
-                timeline: {
-                    start: '2024-06-03',
-                    end: '2024-06-14',
-                    name: 'TEST',
-                    desc: 'TEST',
-                    id: 'key1'
-                }
-            };
-
-            data.push(testdata);
-
-
-        }
-
-
-        var diag = document.querySelector('bcgantt');
-
-        // diag.querySelector('left')
-
-        //renderTable(document.getElementById('testtable'), data)
-        //renderTable(diag.querySelector('bctable'), data)
-        //renderTimeline(diag.querySelector('timeline'), data)
-
-        var gantt = new Gantt({ HTMLElement: diag, Pointer: moment(), DaysBeforePointer: 4, DaysAfterPointer: 4, TimeUnit: 'day', data: jobs });
-        gantt.render();
-
-
+    GetDateTime() {
+        return moment(`${this.date} ${this.hour}:${this.minute}`);
     }
-
-    RenderGantt();
-
-})();
+}
+function getControlAddin() {
+    return document.getElementById('controlAddIn');
+}
+function Init() {
+    //document.getElementById('controlAddIn')!.insertAdjacentHTML('beforeend', html)
+}
+var options = {
+    cities: ['London', 'Hamburg', 'New York']
+};
+function RenderGantt() {
+    var diag = document.querySelector('bcgantt');
+    var gantt = new Gantt(testdata, diag, 4, 4, TimeUnits.Day, moment());
+    gantt.render();
+}
+RenderGantt();
+//# sourceMappingURL=bcui.js.map
