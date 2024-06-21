@@ -1,13 +1,12 @@
-page 50000 PSGLog
+page 50000 TEST
 {
 
     PageType = Card;
     ApplicationArea = All;
     UsageCategory = None;
-    //SourceTable = PSGLogs;
     InsertAllowed = false;
     DeleteAllowed = false;
-    Caption = 'API Logs', Comment = 'DEU="API Logs"';
+    Caption = 'TEST', Comment = 'DEU="TEST"';
     RefreshOnActivate = true;
 
     layout
@@ -15,7 +14,7 @@ page 50000 PSGLog
         area(Content)
         {
             // The control add-in can be placed on the page using usercontrol keyword.
-            usercontrol(PSGLogPage; PSGLogPage)
+            usercontrol(TEST; TEST)
             {
 
                 trigger ControlReady()
@@ -24,7 +23,7 @@ page 50000 PSGLog
                     Req: Text;
                     Content: Text;
                 begin
-                    CurrPage.PSGLogPage.Init();
+                    CurrPage.TEST.Init();
                 end;
             }
         }

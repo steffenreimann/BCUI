@@ -73,6 +73,8 @@ class Gantt {
         this.timelineLines = this.timeline!.querySelector('lines');
         this.table = this.HTMLElement.querySelector('bctable');
 
+
+
         this.data = data;
         this.TableElements = []
         this.TimelineElements = []
